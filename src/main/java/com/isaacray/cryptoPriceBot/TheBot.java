@@ -7,6 +7,8 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.apache.logging.log4j.util.Strings;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +19,7 @@ public class TheBot extends ListenerAdapter {
 
     private final CoinGeckoService coinGeckoService;
     private final List<CryptoSymbol> symbols;
+    private final Logger LOG = LoggerFactory.getLogger(TheBot.class);
 
     public TheBot(
             CoinGeckoService coinGeckoService,
@@ -60,12 +63,13 @@ public class TheBot extends ListenerAdapter {
                 }
             }
             if (Strings.isNotEmpty(message.trim())) {
+                LOG.info("Received \"{}\" from {}", contentRaw, event.getMessage().getAuthor().getAsTag());
                 event.getChannel().sendMessage(message).queue();
             }
         }
     }
 
-    public CryptoSymbol findSymbol(String search) {
+    private CryptoSymbol findSymbol(String search) {
         return symbols.stream().filter(s ->
                 s.getId().equalsIgnoreCase(search)
                         || s.getName().equalsIgnoreCase(search)
