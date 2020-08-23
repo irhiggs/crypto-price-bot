@@ -18,10 +18,10 @@ public class TheBot extends ListenerAdapter {
     private final CoinGeckoService coinGeckoService;
     private final List<CryptoSymbol> symbols;
 
-    @Value("${com.isaacray.cryptoPriceBot.botToken}")
-    String botToken;
-
-    public TheBot(CoinGeckoService coinGeckoService, List<CryptoSymbol> symbols) throws Exception {
+    public TheBot(
+            CoinGeckoService coinGeckoService,
+            List<CryptoSymbol> symbols,
+            @Value("${com.isaacray.cryptoPriceBot.botToken}") String botToken) throws Exception {
         this.coinGeckoService = coinGeckoService;
         this.symbols = symbols;
         JDABuilder jdaBuilder = JDABuilder.createDefault(botToken);
@@ -46,10 +46,10 @@ public class TheBot extends ListenerAdapter {
             for (int i = 0; i < strings.length; i++) {
                 if (strings[i].startsWith("$")) {
                     String searchString = strings[i]
-                        .replace("$", "")
-                        .replace(",", "")
-                        .replace("!", "")
-                        .replace("?", "");
+                            .replace("$", "")
+                            .replace(",", "")
+                            .replace("!", "")
+                            .replace("?", "");
                     if (searchString.endsWith(".")) {
                         searchString = searchString.substring(0, searchString.length() - 1);
                     }
@@ -67,9 +67,9 @@ public class TheBot extends ListenerAdapter {
 
     public CryptoSymbol findSymbol(String search) {
         return symbols.stream().filter(s ->
-            s.getId().equalsIgnoreCase(search)
-                || s.getName().equalsIgnoreCase(search)
-                || s.getSymbol().equalsIgnoreCase(search)
+                s.getId().equalsIgnoreCase(search)
+                        || s.getName().equalsIgnoreCase(search)
+                        || s.getSymbol().equalsIgnoreCase(search)
         ).findFirst().orElse(null);
     }
 }
