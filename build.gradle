@@ -36,3 +36,7 @@ bootJar {
 springBoot {
     buildInfo()
 }
+
+processResources {
+    from 'gradle.properties' into 'gradle.properties'
+}
