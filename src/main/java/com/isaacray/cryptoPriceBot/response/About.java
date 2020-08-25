@@ -18,8 +18,10 @@ public class About implements IResponse {
 
     @Override
     public String getMessage() {
-        return "This Crypto Price Bot is currently running version: " + applicationVersion + "\nPowered by CoinGecko API" +
-            "\nThe query cache time is 15 minutes\nhttps://www.coingecko.com/en/api_terms";
+        return "This Crypto Price Bot is currently running version: **" + applicationVersion + "**." +
+                "\nPowered by CoinGecko API. <https://www.coingecko.com/en/api_terms>" +
+                "\nThe query cache time is **15 minutes**." +
+                "\nCheckout the repo: <https://github.com/irhiggs/crypto-price-bot>";
     }
 
     @Override
