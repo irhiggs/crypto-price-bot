@@ -13,6 +13,7 @@ fi
 
 git clone https://github.com/irhiggs/crypto-price-bot
 cd crypto-price-bot
+git checkout `git tag --sort=v:refname | tail -n 1`
 chmod +x ./gradlew
 ./gradlew clean assemble
 mv `find build/libs/*.jar` /var/lib/crypto-bot/crypto-price-bot.jar
