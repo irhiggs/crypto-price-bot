@@ -14,25 +14,23 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Map;
 
 @Service
 public class TheBot extends ListenerAdapter {
 
     private final CoinGeckoService coinGeckoService;
-    private final List<CryptoSymbol> symbols;
     private final Logger LOG = LoggerFactory.getLogger(TheBot.class);
     private final Map<String, IResponse> allResponses;
+    private final SymbolManager symbolManager;
 
     public TheBot(
-        CoinGeckoService coinGeckoService,
-        List<CryptoSymbol> symbols,
-        @Value("${com.isaacray.cryptoPriceBot.botToken}") String botToken,
-        @Qualifier("allResponses") Map<String, IResponse> allResponses) throws Exception {
+            CoinGeckoService coinGeckoService,
+            @Value("${com.isaacray.cryptoPriceBot.botToken}") String botToken,
+            @Qualifier("allResponses") Map<String, IResponse> allResponses, SymbolManager symbolManager) throws Exception {
         this.coinGeckoService = coinGeckoService;
-        this.symbols = symbols;
         this.allResponses = allResponses;
+        this.symbolManager = symbolManager;
         JDABuilder jdaBuilder = JDABuilder.createDefault(botToken);
         jdaBuilder.setToken(botToken);
         jdaBuilder.addEventListeners(this);
@@ -77,7 +75,7 @@ public class TheBot extends ListenerAdapter {
     }
 
     private CryptoSymbol findSymbol(String search) {
-        return symbols.stream().filter(s ->
+        return symbolManager.getSymbols().stream().filter(s ->
             s.getId().equalsIgnoreCase(search)
                 || s.getName().equalsIgnoreCase(search)
                 || s.getSymbol().equalsIgnoreCase(search)

@@ -22,11 +22,21 @@ public class CacheConfig extends CachingConfigurerSupport {
         return new ConcurrentMapCacheManager() {
             @Override
             protected Cache createConcurrentMapCache(final String name) {
-                return new ConcurrentMapCache(name, CacheBuilder.newBuilder()
-                        .expireAfterWrite(15, TimeUnit.MINUTES)
-                        .build()
-                        .asMap(),
-                        false);
+                switch (name) {
+                    case "getPrice":
+                        return new ConcurrentMapCache(name, CacheBuilder.newBuilder()
+                                .expireAfterWrite(15, TimeUnit.MINUTES)
+                                .build()
+                                .asMap(),
+                                false);
+                    case "getSymbols":
+                        return new ConcurrentMapCache(name, CacheBuilder.newBuilder()
+                                .expireAfterWrite(1, TimeUnit.DAYS)
+                                .build()
+                                .asMap(),
+                                false);
+                }
+                return null;
             }
         };
     }

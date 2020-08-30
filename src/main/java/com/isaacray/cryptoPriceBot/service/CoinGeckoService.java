@@ -27,4 +27,9 @@ public class CoinGeckoService {
         String value = String.valueOf(((Map) map.get(symbol)).get("usd"));
         return WordUtils.capitalize(symbol) + " is worth $" + value + ". \n*Fetched " + (new Date()).toString() + "*\n";
     }
+
+    @Cacheable("getSymbols")
+    public String getSymbols() {
+        return restTemplate.getForObject("https://api.coingecko.com/api/v3/coins/list", String.class);
+    }
 }
