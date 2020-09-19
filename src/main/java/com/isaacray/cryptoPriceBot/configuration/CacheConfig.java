@@ -11,32 +11,38 @@ import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.cache.interceptor.SimpleKeyGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 
 import java.util.concurrent.TimeUnit;
 
 @Configuration
 @EnableCaching
 public class CacheConfig extends CachingConfigurerSupport {
+    @Primary
     @Bean
-    public CacheManager cacheManager() {
+    public CacheManager getPriceCacheManager() {
         return new ConcurrentMapCacheManager() {
             @Override
             protected Cache createConcurrentMapCache(final String name) {
-                switch (name) {
-                    case "getPrice":
-                        return new ConcurrentMapCache(name, CacheBuilder.newBuilder()
-                                .expireAfterWrite(15, TimeUnit.MINUTES)
-                                .build()
-                                .asMap(),
-                                false);
-                    case "getSymbols":
-                        return new ConcurrentMapCache(name, CacheBuilder.newBuilder()
-                                .expireAfterWrite(1, TimeUnit.DAYS)
-                                .build()
-                                .asMap(),
-                                false);
-                }
-                return null;
+                return new ConcurrentMapCache(name, CacheBuilder.newBuilder()
+                        .expireAfterWrite(15, TimeUnit.MINUTES)
+                        .build()
+                        .asMap(),
+                        false);
+            }
+        };
+    }
+
+    @Bean
+    public CacheManager getSymbolsCacheManager() {
+        return new ConcurrentMapCacheManager() {
+            @Override
+            protected Cache createConcurrentMapCache(final String name) {
+                return new ConcurrentMapCache(name, CacheBuilder.newBuilder()
+                        .expireAfterWrite(1, TimeUnit.MINUTES)
+                        .build()
+                        .asMap(),
+                        false);
             }
         };
     }

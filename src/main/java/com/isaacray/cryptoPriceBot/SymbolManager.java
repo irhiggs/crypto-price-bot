@@ -2,8 +2,11 @@ package com.isaacray.cryptoPriceBot;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.isaacray.cryptoPriceBot.dto.CryptoSymbol;
-import com.isaacray.cryptoPriceBot.service.CoinGeckoService;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -12,40 +15,35 @@ import java.util.List;
 
 @Component
 public class SymbolManager {
+    private final org.slf4j.Logger LOG = LoggerFactory.getLogger(SymbolManager.class);
+    private final RestTemplate restTemplate;
+    private final String symbolListUrl;
 
-    private final CoinGeckoService coinGeckoService;
+    private Date time;
 
-    private Date time = new Date();
-    private List<CryptoSymbol> symbols = null;
-
-    public SymbolManager(CoinGeckoService coinGeckoService) {
-        this.coinGeckoService = coinGeckoService;
+    public SymbolManager(RestTemplate restTemplate,
+                         @Value("${com.isaacray.cryptoPriceBot.coinGecko.url.symbolList}")
+                                 String symbolListUrl) {
+        this.restTemplate = restTemplate;
+        this.symbolListUrl = symbolListUrl;
     }
 
     public Date getTime() {
         return time;
     }
 
-    public void resetTime() {
+    private String fetchSymbols() {
         time = new Date();
+        return restTemplate.getForObject(symbolListUrl, String.class);
     }
 
+    @Cacheable(value = "getSymbols", cacheManager = "getSymbolsCacheManager")
     public List<CryptoSymbol> getSymbols() {
-        if (symbols == null) {
-            symbols = generateSymbols(coinGeckoService);
-        }
-        return symbols;
-    }
-
-    public void resetSymbols() {
-        symbols = null;
-    }
-
-    private List<CryptoSymbol> generateSymbols(CoinGeckoService coinGeckoService) {
+        LOG.info("Running symbol gen");
         ObjectMapper objectMapper = new ObjectMapper();
         CryptoSymbol[] cryptoSymbols = null;
         try {
-            cryptoSymbols = objectMapper.readValue(coinGeckoService.getSymbols(), CryptoSymbol[].class);
+            cryptoSymbols = objectMapper.readValue(fetchSymbols(), CryptoSymbol[].class);
         } catch (IOException e) {
             e.printStackTrace();
         }

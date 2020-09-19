@@ -4,28 +4,27 @@ import com.isaacray.cryptoPriceBot.SymbolManager;
 import org.springframework.stereotype.Component;
 
 @Component
-public class UpdateTokenList implements IResponse {
+public class Symbols implements IResponse {
 
 private final SymbolManager symbolManager;
 
-    public UpdateTokenList(SymbolManager symbolManager) {
+    public Symbols(SymbolManager symbolManager) {
         this.symbolManager = symbolManager;
     }
 
     @Override
     public String getMatcher() {
-        return "!update";
+        return "!symbols";
     }
 
     @Override
     public String getMessage() {
-        symbolManager.resetSymbols();
         symbolManager.getSymbols();
         return "The crypto symbols from CoinGecko were updated " + symbolManager.getTime();
     }
 
     @Override
     public String getDescription() {
-        return "The list of tokens on coin gecko is stored locally.  Calling this endpoint will refresh it.";
+        return "The list of tokens on coin gecko is stored locally.  Let's see how old they are.";
     }
 }
