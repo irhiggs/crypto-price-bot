@@ -35,3 +35,5 @@ systemctl daemon-reload
 service crypto-bot restart
 cd ..
 rm -Rf crypto-price-bot
+
+update-rc.d crypto-bot defaults
