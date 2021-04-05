@@ -1,5 +1,6 @@
 package com.isaacray.cryptoPriceBot.model;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -7,13 +8,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(properties = "com.isaacray.cryptoPriceBot.botToken=testing")
+@SpringBootTest
 class MyListRepositoryTest {
 
     @Autowired
     MyListRepository myListRepository;
 
     @Test
+    @Disabled
     public void testDb() {
         MyList saveIt = new MyList();
         saveIt.setSymbols(asList("deez", "nutz"));
