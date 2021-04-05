@@ -20,7 +20,7 @@ public class CoinGeckoService {
 
     public CoinGeckoService(RestTemplate restTemplate,
                             @Value("${com.isaacray.cryptoPriceBot.coinGecko.url.simplePrice}")
-                            String simplePriceUrl) {
+                                    String simplePriceUrl) {
         this.restTemplate = restTemplate;
         this.simplePriceUrl = simplePriceUrl;
     }

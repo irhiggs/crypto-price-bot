@@ -17,10 +17,10 @@ public class CryptoSymbol {
     @Override
     public String toString() {
         return "CryptoSymbols{" +
-            "id='" + id + '\'' +
-            ", symbol='" + symbol + '\'' +
-            ", name='" + name + '\'' +
-            '}';
+                "id='" + id + '\'' +
+                ", symbol='" + symbol + '\'' +
+                ", name='" + name + '\'' +
+                '}';
     }
 
     public String getId() {

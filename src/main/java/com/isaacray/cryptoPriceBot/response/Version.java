@@ -1,5 +1,6 @@
 package com.isaacray.cryptoPriceBot.response;
 
+import net.dv8tion.jda.api.entities.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
@@ -17,7 +18,7 @@ public class Version implements IResponse {
     }
 
     @Override
-    public String getMessage() {
+    public String getMessage(User user, String contentRaw) {
         return "This Crypto Price Bot is currently running " + applicationVersion + "\nPowered by CoinGecko API";
     }
 

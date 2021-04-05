@@ -1,5 +1,6 @@
 package com.isaacray.cryptoPriceBot.response;
 
+import net.dv8tion.jda.api.entities.User;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -11,7 +12,7 @@ public class Price implements IResponse {
     }
 
     @Override
-    public String getMessage() {
+    public String getMessage(User user, String contentRaw) {
         return "";
     }
 

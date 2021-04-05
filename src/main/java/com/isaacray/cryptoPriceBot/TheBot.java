@@ -47,26 +47,10 @@ public class TheBot extends ListenerAdapter {
         String firstWord = contentRaw.split(" ")[0];
         final IResponse iResponse = allResponses.get(firstWord.toLowerCase());
         if (iResponse != null) {
-            event.getChannel().sendMessage(iResponse.getMessage()).queue();
+            event.getChannel().sendMessage(iResponse.getMessage(event.getAuthor(), contentRaw)).queue();
         } else {
             final String[] strings = contentRaw.split(" ");
-            String message = "";
-            for (int i = 0; i < strings.length; i++) {
-                if (strings[i].startsWith("$")) {
-                    String searchString = strings[i]
-                        .replace("$", "")
-                        .replace(",", "")
-                        .replace("!", "")
-                        .replace("?", "");
-                    if (searchString.endsWith(".")) {
-                        searchString = searchString.substring(0, searchString.length() - 1);
-                    }
-                    CryptoSymbol symbol = findSymbol(searchString);
-                    if (symbol != null) {
-                        message += coinGeckoService.getPrice(symbol.getId());
-                    }
-                }
-            }
+            String message = getPriceMessage(strings);
             if (Strings.isNotEmpty(message.trim())) {
                 LOG.info("Received \"{}\" from {}", contentRaw, event.getMessage().getAuthor().getAsTag());
                 event.getChannel().sendMessage(message).queue();
@@ -74,11 +58,32 @@ public class TheBot extends ListenerAdapter {
         }
     }
 
+    public String getPriceMessage(String[] strings){
+        String message = "";
+        for (int i = 0; i < strings.length; i++) {
+            if (strings[i].startsWith("$")) {
+                String searchString = strings[i]
+                        .replace("$", "")
+                        .replace(",", "")
+                        .replace("!", "")
+                        .replace("?", "");
+                if (searchString.endsWith(".")) {
+                    searchString = searchString.substring(0, searchString.length() - 1);
+                }
+                CryptoSymbol symbol = findSymbol(searchString);
+                if (symbol != null) {
+                    message += coinGeckoService.getPrice(symbol.getId());
+                }
+            }
+        }
+        return message;
+    }
+
     private CryptoSymbol findSymbol(String search) {
         return symbolManager.getSymbols().stream().filter(s ->
-            s.getId().equalsIgnoreCase(search)
-                || s.getName().equalsIgnoreCase(search)
-                || s.getSymbol().equalsIgnoreCase(search)
+                s.getId().equalsIgnoreCase(search)
+                        || s.getName().equalsIgnoreCase(search)
+                        || s.getSymbol().equalsIgnoreCase(search)
         ).findFirst().orElse(null);
     }
 }
