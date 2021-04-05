@@ -7,7 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
+@SpringBootTest(properties = "com.isaacray.cryptoPriceBot.botToken=testing")
 class MyListRepositoryTest {
 
     @Autowired
